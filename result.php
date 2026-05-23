@@ -20,7 +20,6 @@
             color: var(--text-dark);
         }
 
-        /* Thanh điều hướng phía trên */
         .top-bar {
             background-color: var(--primary-teal);
             padding: 15px 50px;
@@ -51,7 +50,6 @@
             color: var(--primary-teal);
         }
 
-        /* Khung chứa kết quả */
         .container {
             max-width: 1000px;
             margin: 40px auto;
@@ -61,13 +59,12 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
-        /* Thêm class này để bảng dài không bị tràn ra ngoài khung trắng */
         .table-responsive {
             overflow-x: auto;
             margin-top: 20px;
         }
 
-        /* Thiết kế bảng dữ liệu */
+   
         table {
             width: 100%;
             border-collapse: collapse;
@@ -106,19 +103,19 @@
 
     <div class="container">
         <?php
-        // Ép hiển thị lỗi
+        
         ini_set('display_errors', 1);
         ini_set('display_startup_errors', 1);
         error_reporting(E_ALL);
 
-        // Lấy dữ liệu từ Form
+     
         $type = isset($_POST["type"]) ? $_POST["type"] : '';
         $name = isset($_POST["name"]) ? $_POST["name"] : '';
 
         if (empty($type) || empty($name)) {
             echo "<p class='error'>Error: Please enter a keyword to search.</p>";
         } else {
-            // Kết nối Database
+         
             $servername = "localhost";
             $username = "tritin2805"; 
             $password = "tin280506";     
@@ -130,15 +127,15 @@
                 die("<p class='error'>Database connection failed: " . $conn->connect_error . "</p>");
             }
 
-            // Bảo vệ khỏi SQL Injection
+         
             $safe_type = $conn->real_escape_string($type);
             $safe_name = $conn->real_escape_string($name);
 
-            // Đổi text sang tiếng Anh
+        
             echo "<h3>Search results in <span class='keyword-highlight'>" . strtoupper($safe_type) . "</span> table</h3>";
             echo "<p>Keyword: <span class='keyword-highlight'>" . htmlspecialchars($safe_name) . "</span></p>";
 
-            // Tạo câu lệnh SQL tương ứng với bảng được chọn
+          
             $table_columns = [
                 "driver"  => "driver_id, first_name, last_name",
                 "bus"     => "bus_id, bus_num, plate_num",
@@ -148,37 +145,36 @@
 
             $sql = "";
             
-            // Kiểm tra xem bảng người dùng chọn có hợp lệ không
+         
             if (array_key_exists($safe_type, $table_columns)) {
                 $columns_to_search = $table_columns[$safe_type];
                 
-                // 1. Tách từ khóa người dùng nhập thành từng từ (bỏ qua khoảng trắng thừa)
+                
                 $words = preg_split('/\s+/', trim($name)); 
                 $conditions = [];
                 
-                // 2. Tạo điều kiện tìm kiếm cho mỗi từ
+             
                 foreach ($words as $word) {
                     $safe_word = $conn->real_escape_string($word);
                     $conditions[] = "CONCAT_WS(' ', $columns_to_search) LIKE '%$safe_word%'";
                 }
                 
-                // 3. Nối các điều kiện bằng AND (yêu cầu tất cả các từ đều phải có mặt)
+         
                 $where_clause = implode(' AND ', $conditions);
                 
-                // 4. Lắp ráp câu lệnh SQL hoàn chỉnh
+               
                 $sql = "SELECT * FROM $safe_type WHERE " . $where_clause;
             }
 
-            // Chạy SQL và in kết quả ra bảng
+     
             if ($sql != "") {
                 $result = $conn->query($sql);
 
                 if ($result && $result->num_rows > 0) {
-                    // Bọc bảng trong thẻ div cuộn ngang
+                  
                     echo "<div class='table-responsive'>";
                     echo "<table>";
-                    
-                    // In tiêu đề cột (Đã sửa lại để bỏ dấu gạch dưới và in hoa chữ đầu)
+             
                     $fields = $result->fetch_fields();
                     echo "<thead><tr>";
                     foreach ($fields as $field) {
@@ -188,7 +184,7 @@
                     }
                     echo "</tr></thead><tbody>";
 
-                    // In dữ liệu từng hàng
+                
                     while($row = $result->fetch_assoc()) {
                         echo "<tr>";
                         foreach ($row as $data) {
@@ -197,7 +193,7 @@
                         echo "</tr>";
                     }
                     echo "</tbody></table>";
-                    echo "</div>"; // Đóng div cuộn ngang
+                    echo "</div>"; 
                 } else {
                     echo "<p>No records found matching the keyword <strong>'$safe_name'</strong>.</p>";
                 }
@@ -205,7 +201,7 @@
                 echo "<p class='error'>Invalid table selection.</p>";
             }
 
-            // Đóng kết nối
+           
             $conn->close();
         }
         ?>
