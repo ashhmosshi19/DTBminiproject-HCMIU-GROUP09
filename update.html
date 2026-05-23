@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Problem 10.3: Update Bus Record</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: inline-block; width: 150px; }
+    </style>
+</head>
+<body>
+
+    <h2>Update Bus Status and Maintenance</h2>
+    
+    <form action="update.php" method="post">
+        <div class="form-group">
+            <label for="bus_id">Bus ID to update:</label>
+            <input type="text" name="bus_id" id="bus_id" placeholder="e.g., B01" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="status">New Status:</label>
+            <select name="status" id="status">
+                <option value="Active">Active</option>
+                <option value="Repair">Repair</option>
+                <option value="Out of Service">Out of Service</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="maintenance">Maintenance Note:</label>
+            <input type="text" name="maintenance" id="maintenance" placeholder="e.g., Engine replaced May 2026" required>
+        </div>
+        
+        <input type="submit" value="Update Record">
+    </form>
+
+</body>
+</html>
+
